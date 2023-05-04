@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color(0xFF765EFC),
         leading: Container(
           padding: const EdgeInsets.all(5),
-          child: Image.asset('assets/images/logo.png'),
+          child: Image.asset('assets/images/logo-color.png'),
         ),
         actions: [
           PopupMenuButton(
