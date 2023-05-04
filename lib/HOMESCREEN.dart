@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -175,8 +177,31 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
+decodeImage(Uint8List bytes) {
+}
 
-Future selectImage() async {
+Future<String> _processImage(File imageFile) async {
+  // Decode the image using the Image package
+  final Uint8List bytes = await imageFile.readAsBytes();
+  final image = decodeImage(bytes);
+
+  // Resize the image to 224x224 using the Image package
+  final resizedImage = copyResizeCropSquare(image, 224);
+
+  // Save the resized image to a temporary file
+  final tempDir = await getTemporaryDirectory();
+  final tempPath = '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+  File(tempPath).writeAsBytesSync((resizedImage));
+
+  return tempPath;
+}
+
+copyResizeCropSquare(image, int i) {
+}
+
+
+
+Future selectImage(Null Function() param0) async {
   XFile? image = await ImagePicker().pickImage(
     source: ImageSource.gallery,
     imageQuality: 10,
@@ -191,12 +216,12 @@ Future selectImage() async {
     try {
       // Copy the selected image to the app's documents directory
       await imageFile.copy(imagePath);
-      setState(() {
-        selectedImagePath = imagePath;
+      selectImage(() {
+        var selectedImagePath = imagePath;
       });
     } catch (e) {
       print(e);
     }
   }
 }
-}
+
